@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Bujji!</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+    <style>
+        /* --- Universal Styles & Cute Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Fira+Code:wght@500&display=swap');
+
+        /* --- Custom Heart Cursor --- */
+        body {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="27" viewBox="0 0 24 27"><path fill="%23ff6b8b" d="M12 4.5c-3.5-4-8.5-3.5-10.5 0-2 3.5-1 8 3 11 3 2 7.5 3.5 7.5 3.5s4.5-1.5 7.5-3.5c4-3 5-7.5 3-11-2-3.5-7-4-10.5 0z"/></svg>') 12 5, auto;
+        }
+
+        :root {
+            --primary-color: #fde7f0; 
+            --secondary-color: #e91e63; 
+            --accent-color: #d4af37;  
+            --text-color: #444;
+            --heart-color: #ff7999;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif; background-color: #fffafc;
+            color: var(--text-color); margin: 0; padding: 0; overflow-x: hidden;
+            background: linear-gradient(-45deg, #fde7f0, #fff3f8, #fef6f9, #fffafc);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+
+        /* --- Preloader CSS --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fffafc; z-index: 10002; display: flex;
+            justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 0.75s ease;
+        }
+        #preloader .preloader-heart {
+            font-size: 4rem; color: var(--secondary-color);
+            animation: pulse 1.5s infinite;
+        }
+        #preloader p {
+            font-family: 'Dancing Script', cursive; font-size: 1.8rem;
+            color: var(--text-color); margin-top: 20px;
+        }
+
+        /* --- Floating Hearts Animation --- */
+        .heart {
+            position: fixed; top: -10vh; font-size: 1.5rem; color: var(--heart-color);
+            animation: fall 12s infinite linear; opacity: 0; z-index: 9999;
+            will-change: transform, opacity; pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- General Styling --- */
+        .container { max-width: 950px; margin: 0 auto; padding: 20px; }
+        h1, h2 { font-family: 'Dancing Script', cursive; color: var(--secondary-color); text-align: center; }
+        h2 { font-size: 3.5rem; margin-bottom: 50px; text-shadow: 1px 1px 5px rgba(0,0,0,0.1); }
+
+        /* --- Header Section --- */
+        .header {
+            background-image: url('https://i.pinimg.com/originals/f6/c3/a6/f6c3a61d67aa81577a79e49dda2fe3b7.gif');
+            background-size: cover; padding: 80px 20px 40px 20px; text-align: center; color: white;
+            position: relative; border-bottom: 5px solid var(--primary-color);
+            display: flex; flex-direction: column; justify-content: center;
+            align-items: center; min-height: 80vh;
+        }
+        .header h1 { font-size: 6rem; margin: 0; color: #ff1493; animation: glow 2.5s ease-in-out infinite; }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px #fff, 0 0 20px #ff4da6; }
+            50% { text-shadow: 0 0 15px #fff, 0 0 25px #ff4da6; }
+        }
+
+        .header p { font-size: 1.8rem; text-shadow: 1px 1px 5px rgba(255,255,255,0.8); color: #333; margin-top: 10px; font-weight: 600; }
+
+        .start-heart {
+            font-size: 4rem; margin-top: 40px; cursor: pointer;
+            animation: pulse-heart 2s infinite; transition: transform 0.3s ease;
+        }
+        .start-heart:hover { transform: scale(1.2); }
+        @keyframes pulse-heart {
+            0% { transform: scale(1); text-shadow: 0 0 10px #ff4da6; }
+            50% { transform: scale(1.1); text-shadow: 0 0 20px #ff4da6; }
+            100% { transform: scale(1); text-shadow: 0 0 10px #ff4da6; }
+        }
+
+        /* --- Content Sections --- */
+        .section {
+            padding: 80px 20px; border-bottom: 2px dashed var(--primary-color);
+            opacity: 0; transform: translateY(50px); transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+        }
+        .section:last-of-type { border-bottom: none; }
+        .section.visible { opacity: 1; transform: translateY(0); }
+        
+        /* --- Relationship Counter --- */
+        .counter-section { background: none; }
+        .counter-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .counter-box {
+            background: white; padding: 20px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1); text-align: center; min-width: 100px;
+            border: 2px solid var(--primary-color); position: relative; overflow: hidden;
+        }
+        .counter-box::before {
+            content: "✨"; position: absolute; top: 5px; right: 5px; font-size: 1rem; opacity: 0.5;
+        }
+        .counter-box .number { font-size: 3rem; font-weight: 600; color: var(--secondary-color); }
+        .counter-box .label { font-size: 1rem; color: #777; }
+        .counter-separator { font-size: 3rem; font-weight: 600; color: var(--secondary-color); padding: 0 10px; transform: translateY(-10px); }
+        
+        /* --- SQL Box --- */
+        .sql-container {
+            background-color: #282c34; border-radius: 15px; padding: 20px; margin: 40px auto;
+            max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-family: 'Fira Code', monospace; color: #abb2bf; text-align: left;
+            position: relative; border-left: 5px solid #ff7999;
+        }
+        .sql-container::before { content: "Query executed successfully! 💖"; position: absolute; top: -12px; left: 15px; background: #ff7999; color: white; padding: 2px 10px; border-radius: 10px; font-size: 0.8rem; font-family: 'Poppins', sans-serif;}
+        .sql-keyword { color: #c678dd; font-weight: bold; }
+        .sql-string { color: #98c379; }
+        .sql-comment { color: #5c6370; font-style: italic; }
+
+        /* --- Swiper Carousel --- */
+        .swiper { width: 100%; padding-top: 50px; padding-bottom: 50px; }
+        .swiper-slide {
+            background-position: center; background-size: contain; background-repeat: no-repeat;
+            background-color: #fffafc; width: 320px; height: 320px; border-radius: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 6px solid white;
+        }
+        .swiper-button-next, .swiper-button-prev { color: var(--secondary-color) !important; }
+        .swiper-pagination-bullet-active { background: var(--secondary-color) !important; }
+
+        /* --- Letter Section --- */
+        .letter {
+            background-color: white; padding: 35px 40px; border-radius: 20px;
+            border-left: 7px solid var(--secondary-color); box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1);
+            font-size: 1.05rem; line-height: 1.7; position: relative;
+            max-width: 750px; margin: 0 auto;
+        }
+        
+        /* --- Proposal Section --- */
+        .proposal-container { text-align: center; margin-top: 30px; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15); border: 3px solid #ff7999;}
+        .proposal-container h3 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--secondary-color); margin-bottom: 30px;}
+        .btn-container { position: relative; height: 100px; display: flex; justify-content: center; align-items: center; gap: 30px; }
+        .propose-btn {
+            font-family: 'Poppins', sans-serif; font-size: 1.5rem; padding: 15px 40px;
+            border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
+            transition: transform 0.2s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 10;
+        }
+        .btn-yes { background-color: #4CAF50; color: white; }
+        .btn-yes:hover { transform: scale(1.1); background-color: #45a049; }
+        .btn-no { background-color: #f44336; color: white; position: relative; }
+        
+        /* --- SECRET MESSAGE SECTION --- */
+        .secret-button-container { text-align: center; margin-top: 35px; }
+        .secret-button {
+            background-color: var(--secondary-color); color: white; border: none;
+            padding: 12px 25px; border-radius: 50px; font-family: 'Poppins', sans-serif;
+            font-size: 1rem; font-weight: 600; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(233, 30, 99, 0.4);
+            animation: pulse-heart 2.5s infinite; transition: transform 0.3s ease;
+        }
+        .secret-button:hover { transform: scale(1.1) translateY(-5px); }
+        .modal {
+            display: none; position: fixed; z-index: 10001;
+            left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.6); animation: fadeIn 0.5s;
+        }
+        .modal-content {
+            background-color: #fffafc; margin: 15% auto; padding: 40px;
+            border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0,0,0,0.2); position: relative; font-family: 'Poppins', sans-serif;
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+        }
+        .modal-content h2 { text-align: center; margin-top: 0; font-size: 2.5rem; color: var(--secondary-color); font-family: 'Dancing Script', cursive;}
+        .modal-content p { font-size: 1.1rem; line-height: 1.8; color: #444; }
+        .close-button {
+            color: #aaa; float: right; font-size: 28px; font-weight: bold; transition: color 0.3s;
+        }
+        .close-button:hover, .close-button:focus { color: black; text-decoration: none; cursor: pointer; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+
+        /* --- WEDDING MODAL --- */
+        #wedding-modal {
+            display: none; position: fixed; z-index: 10005;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #fde7f0 0%, #ffc1cc 100%);
+            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            animation: fadeIn 1s; padding: 20px; box-sizing: border-box;
+        }
+        .wedding-card {
+            background: white; padding: 40px; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(233, 30, 99, 0.3); max-width: 600px; width: 100%;
+            border: 5px solid var(--accent-color); 
+            position: relative;
+        }
+        .wedding-title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #e91e63; margin-bottom: 10px; }
+        .wedding-text { font-size: 1.2rem; line-height: 1.8; margin-bottom: 30px; color: #333; font-family: 'Poppins', sans-serif; }
+        
+        .telugu-vow { font-size: 1.4rem; font-style: italic; color: var(--accent-color); display: block; margin: 15px 0;}
+        .panthulu-text { font-weight: bold; color: #d32f2f; font-size: 1.1rem;}
+
+        .wedding-btn {
+            background-color: var(--accent-color); color: white; border: none; padding: 15px 40px;
+            border-radius: 50px; font-size: 1.3rem; cursor: pointer; font-family: 'Poppins', sans-serif;
+            font-weight: bold; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5); transition: transform 0.2s;
+        }
+        .wedding-btn:hover { transform: scale(1.05); background-color: #b8962c; }
+
+        /* --- Footer --- */
+        .footer { text-align: center; padding: 40px 20px; background-color: var(--primary-color); color: var(--secondary-color); font-size: 1.5rem; font-family: 'Dancing Script', cursive; }
+        .footer-heart { display: inline-block; animation: pulse 1.5s infinite; }
+
+        /* --- MUSIC TOGGLE BUTTON --- */
+        #music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+            z-index: 10000;
+            display: none; /* Hidden until clicked */
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+        #music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* --- RESPONSIVE STYLES (MOBILE) --- */
+        @media (max-width: 768px) {
+            h2 { font-size: 2.5rem; }
+            .header h1 { font-size: 3.5rem; }
+            .header p { font-size: 1.3rem; }
+            .section { padding: 60px 15px; }
+            .container { padding: 10px; }
+            .counter-box { min-width: 80px; padding: 15px; }
+            .counter-box .number { font-size: 2rem; }
+            .counter-separator { font-size: 2rem; transform: translateY(-5px); }
+            #carousel .swiper { padding-top: 20px; padding-bottom: 40px; }
+            .mySwiper .swiper-slide { width: 260px; height: 260px; }
+            .letter { padding: 25px; font-size: 0.95rem; line-height: 1.6;} 
+            .sql-container { font-size: 0.8rem; }
+            .proposal-container h3 { font-size: 2.2rem; }
+            .btn-container { flex-direction: row; gap: 10px; }
+            .propose-btn { padding: 12px 25px; font-size: 1.2rem; }
+            .wedding-card { padding: 30px 20px; }
+            .wedding-title { font-size: 2.5rem; }
+            .wedding-text { font-size: 1.1rem; }
+            .telugu-vow { font-size: 1.2rem; }
+            
+            #music-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="images/bg.mp3" type="audio/mpeg">
+    </audio>
+    
+    <button id="music-toggle" title="Play/Pause Music">🔊</button>
+
+    <div id="preloader">
+        <div class="preloader-heart">❤️</div>
+        <p>Loading Our Memories...</p>
+    </div>
+
+    <div id="hearts-container"></div>
+
+    <header class="header">
+        <h1>Happy Birthday, Bujji!</h1>
+        <p>To my beautiful girl, my partner in crime, and my future.</p>
+        
+        <div class="sql-container">
+            <span class="sql-keyword">SELECT</span> * <br>
+            <span class="sql-keyword">FROM</span> my_heart <br>
+            <span class="sql-keyword">WHERE</span> owner = <span class="sql-string">'Bujji'</span> <br>
+            <span class="sql-keyword">AND</span> connection = <span class="sql-string">'Forever'</span>; <br><br>
+            <span class="sql-comment">-- 1 row returned (Infinite Love)</span>
+        </div>
+
+        <div class="start-heart" id="start-journey-button">❤️</div>
+    </header>
+
+    <section class="section counter-section" id="journey-start">
+        <h2>Our Journey Since Nov 20, 2021 ✨</h2>
+        <div class="counter-container">
+            <div class="counter-box"><div id="years" class="number">0</div><div class="label">Years</div></div>
+            <div class="counter-separator">:</div>
+            <div class="counter-box"><div id="months" class="number">0</div><div class="label">Months</div></div>
+            <div class="counter-separator">:</div>
+            <div class="counter-box"><div id="days" class="number">0</div><div class="label">Days</div></div>
+            <div class="counter-separator">:</div>
+            <div class="counter-box"><div id="hours" class="number">0</div><div class="label">Hours</div></div>
+            <div class="counter-separator">:</div>
+            <div class="counter-box"><div id="minutes" class="number">0</div><div class="label">Minutes</div></div>
+            <div class="counter-separator">:</div>
+            <div class="counter-box"><div id="seconds" class="number">0</div><div class="label">Seconds</div></div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="section" id="carousel">
+            <h2>Our Beautiful Memories 📸</h2>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="gallery-wrapper"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+
+        <section class="section" id="letter">
+            <h2>A Letter to My Bujji 💌</h2>
+            <div class="letter">
+                <p>My Dearest Bujji,</p>
+                <p>Our journey started so unexpectedly, but looking back, it is the absolute best thing that has ever happened to me in my entire life. Every single day with you is a blessing. 🥺❤️</p>
+                <p>I know we have our silly fights and arguments sometimes, but I want you to know this: <b>fights are temporary, but we are forever.</b> No matter how many arguments we get into, we must always stay like this—together. I never want us to separate. You are my home.</p>
+                <p>Please, promise me you'll never leave me, no matter how hard things get or how many times we clash. You are my safe place, my best friend, and my whole heart.</p>
+                <p>I love you more than words can say. Happy Birthday, my beautiful girl! Let's celebrate many, many more together.</p>
+                <p>Forever yours,</p>
+                <p><b>-Kanna 💕</b></p>
+
+                <div class="secret-button-container">
+                    <button id="secret-trigger-button" class="secret-button">A Secret Promise... 🔒❤️</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="proposal">
+            <div class="proposal-container">
+                <h3>Bujji, I have a very important question...</h3>
+                <p>Will you deal with my nonsense forever?</p>
+                <h2 style="font-size: 2.5rem; margin-top: 10px;">Will you marry me? 💍</h2>
+                <div class="btn-container">
+                    <button class="propose-btn btn-yes" onclick="startWedding()">YES!</button>
+                    <button class="propose-btn btn-no" id="no-btn">NO</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Crafted with an endless ocean of love for my Bujji <span class="footer-heart">❤️</span></p>
+        <p style="font-size: 1rem; font-family: 'Poppins', sans-serif;">Yours, Kanna</p>
+    </footer>
+
+    <div id="secret-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="close-secret">&times;</span>
+            <h2>My Promise to You 💍</h2>
+            <p>Listen to me, Bujji...</p>
+            <p>Our journey may have started unexpectedly, but my destination is absolutely clear. <b>Our journey will only end with our marriage.</b></p>
+            <p>I don't care how many times we argue, or how many fights we get into. My love for you is stubborn. I am never letting you go. We are meant to be together forever, and I will stand by your side through everything.</p>
+            <p>I love you unconditionally.</p>
+            <p style="text-align: right; font-weight: bold; color: var(--secondary-color); font-size: 1.2rem;">- Your Kanna</p>
+        </div>
+    </div>
+
+    <div id="wedding-modal">
+        <div class="wedding-card">
+            <h2 class="wedding-title" id="wedding-title">Step 1</h2>
+            <div class="wedding-text" id="wedding-text">Take the 1st step with Kanna...</div>
+            <button class="wedding-btn" id="wedding-btn">Next Step ❤️</button>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // --- Preloader ---
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => { preloader.style.display = 'none'; }, 750); 
+        });
+
+        const bgMusic = document.getElementById('bg-music');
+        const musicToggle = document.getElementById('music-toggle');
+
+        // --- Start Background Music ---
+        document.getElementById('start-journey-button').addEventListener('click', function() {
+            if (bgMusic.paused) {
+                bgMusic.play().catch(error => console.log("Audio play prevented by browser:", error));
+                // Show the music toggle button once music starts
+                musicToggle.style.display = 'flex';
+                musicToggle.innerText = '🔊';
+            }
+            document.getElementById('journey-start').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // --- Music Play/Pause Toggle ---
+        musicToggle.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicToggle.innerText = '🔊';
+            } else {
+                bgMusic.pause();
+                musicToggle.innerText = '🔇';
+            }
+        });
+
+        // --- Falling Hearts ---
+        const heartsContainer = document.getElementById('hearts-container');
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart'); heart.innerHTML = '&#10084;';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 7 + 5 + 's';
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = Math.random() * 1 + 0.5 + 'rem';
+            heartsContainer.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 12000);
+        }
+        setInterval(createHeart, 350);
+
+        // --- Counter ---
+        const startDate = new Date('2021-11-20T23:02:00');
+        function updateCounter() {
+            const now = new Date(); let diff = now - startDate;
+            let s = Math.floor(diff / 1000) % 60; let m = Math.floor(diff / (1000 * 60)) % 60;
+            let totalHours = Math.floor(diff / (1000 * 60 * 60)); let h = totalHours % 24;
+            let tempDate = new Date(startDate); let years = now.getFullYear() - tempDate.getFullYear();
+            let months = now.getMonth() - tempDate.getMonth(); let days = now.getDate() - tempDate.getDate();
+            if (months < 0 || (months === 0 && days < 0)) { years--; months += (months < 0 ? 12 : 0); }
+            if (days < 0) {
+                let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate(); months--;
+                if (months < 0) { months = 11; years--; }
+            }
+            if (now.getHours() < startDate.getHours() || (now.getHours() === startDate.getHours() && now.getMinutes() < startDate.getMinutes())){
+                if(days <= 0){ let prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate() -1; months--; } else { days--; }
+            }
+            document.getElementById('years').innerText = years; document.getElementById('months').innerText = months;
+            document.getElementById('days').innerText = days; document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('minutes').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('seconds').innerText = s < 10 ? '0' + s : s;
+        }
+        setInterval(updateCounter, 1000); updateCounter();
+
+        // --- Gallery ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const galleryWrapper = document.getElementById('gallery-wrapper');
+            function findImageUrl(picNumber) {
+                return new Promise((resolve) => {
+                    const jpgUrl = `images/pic${picNumber}.jpeg`; const pngUrl = `images/pic${picNumber}.jpeg`;
+                    const img = new Image(); img.onload = () => resolve(jpgUrl); 
+                    img.onerror = () => {
+                        const pngImg = new Image(); pngImg.onload = () => resolve(pngUrl);
+                        pngImg.onerror = () => resolve(null); pngImg.src = pngUrl;
+                    };
+                    img.src = jpgUrl;
+                });
+            }
+            const imagePromises = []; for (let i = 1; i <= 42; i++) { imagePromises.push(findImageUrl(i)); }
+            Promise.all(imagePromises).then(urls => {
+                urls.forEach(url => {
+                    if (url) { 
+                        const slide = document.createElement('div'); slide.className = 'swiper-slide';
+                        slide.style.backgroundImage = `url('${url}')`; galleryWrapper.appendChild(slide);
+                    }
+                });
+                var swiper = new Swiper(".mySwiper", {
+                    effect: "coverflow", grabCursor: true, centeredSlides: true,
+                    slidesPerView: "auto", loop: true,
+                    autoplay: { delay: 3000, disableOnInteraction: false, },
+                    coverflowEffect: { rotate: 50, stretch: 0, depth: 100, modifier: 1, slideShadows: true, },
+                    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev", },
+                });
+            });
+        });
+        
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible'); observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        sections.forEach(section => { observer.observe(section); });
+
+        // --- UPDATED: Nearby Runaway NO Button ---
+        const noBtn = document.getElementById('no-btn');
+        const moveBtn = () => {
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+
+            // Get current button position
+            const rect = noBtn.getBoundingClientRect();
+            let currX = rect.left;
+            let currY = rect.top;
+
+            // Generate a random jump angle and distance (75px to 150px away)
+            let angle = Math.random() * 2 * Math.PI;
+            let distance = 75 + Math.random() * 75;
+
+            let newX = currX + Math.cos(angle) * distance;
+            let newY = currY + Math.sin(angle) * distance;
+
+            // Clamp the coordinates strictly within the viewport limits
+            newX = Math.max(10, Math.min(newX, maxX));
+            newY = Math.max(10, Math.min(newY, maxY));
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            noBtn.style.zIndex = '999999'; 
+        };
+        noBtn.addEventListener('mouseover', moveBtn);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
+
+        // --- Secret Modal ---
+        const secretModal = document.getElementById("secret-modal");
+        const triggerButton = document.getElementById("secret-trigger-button");
+        const closeSecret = document.getElementById("close-secret");
+
+        triggerButton.onclick = function() { secretModal.style.display = "block"; }
+        closeSecret.onclick = function() { secretModal.style.display = "none"; }
+        window.onclick = function(event) {
+            if (event.target == secretModal) { secretModal.style.display = "none"; }
+        }
+
+        // --- Live Wedding Logic & Verses ---
+        const weddingModal = document.getElementById('wedding-modal');
+        const weddingTitle = document.getElementById('wedding-title');
+        const weddingText = document.getElementById('wedding-text');
+        const weddingBtn = document.getElementById('wedding-btn');
+        
+        let currentWeddingStep = 0;
+        
+        const weddingSequence = [
+            { title: "First Step", text: "<span class='panthulu-text'>Panthulu: Take the 1st step with Kanna...</span><br><span class='telugu-vow'>ఓం ఏకమిషే విష్ణుత్వా నయతు</span>For a home filled with food, peace, and endless joy together. 🌾", btn: "Take the 1st Step ❤️" },
+            { title: "Second Step", text: "<span class='panthulu-text'>Panthulu: Take the 2nd step with Kanna...</span><br><span class='telugu-vow'>ఓం ద్వే ఊర్జే విష్ణుత్వా నయతు</span>For the strength to face all our 'fights' together and never give up. 💪", btn: "Take the 2nd Step ❤️" },
+            { title: "Third Step", text: "<span class='panthulu-text'>Panthulu: Take the 3rd step with Kanna...</span><br><span class='telugu-vow'>ఓం త్రీణి వ్రతాయ విష్ణుత్వా నయతు</span>For wealth, success, and sharing all our beautiful dreams. ✨", btn: "Take the 3rd Step ❤️" },
+            { title: "Fourth Step", text: "<span class='panthulu-text'>Panthulu: Take the 4th step with Kanna...</span><br><span class='telugu-vow'>ఓం చత్వారి మయోభవాయ విష్ణుత్వా నయతు</span>For unconditional love, deep respect, and unbreakable trust. 🥰", btn: "Take the 4th Step ❤️" },
+            { title: "Fifth Step", text: "<span class='panthulu-text'>Panthulu: Take the 5th step with Kanna...</span><br><span class='telugu-vow'>ఓం పంచ పశుభ్యో విష్ణుత్వా నయతు</span>For our future family and creating the happiest memories. 👨‍👩‍👧‍👦", btn: "Take the 5th Step ❤️" },
+            { title: "Sixth Step", text: "<span class='panthulu-text'>Panthulu: Take the 6th step with Kanna...</span><br><span class='telugu-vow'>ఓం షడ్భ్యో విష్ణుత్వా నయతు</span>For good health, and standing by each other in every season of life. 🌿", btn: "Take the 6th Step ❤️" },
+            { title: "Seventh Step", text: "<span class='panthulu-text'>Panthulu: Take the 7th step with Kanna...</span><br><span class='telugu-vow'>ఓం సప్తే సప్తభ్యో హోతాభ్యో విష్ణుత్వా నయతు</span>For eternal friendship. We are now one soul, inseparable forever. ♾️", btn: "Take the 7th Step ❤️" },
+            { title: "Mangalasutram", text: "<span class='panthulu-text'>Panthulu: Kanna, tie the knot...</span><br><br>Get the holy knot tied from Kanna. He ties the three holy knots of the Mangalasutram around your neck, keeping you safe and making you his forever and ever. 📿", btn: "Accept Mangalasutram 🌺" },
+            { title: "Kumkuma", text: "<span class='panthulu-text'>Panthulu: Kanna, apply the Kumkuma...</span><br><br>Get Kumkuma gently applied on your forehead in the most beautiful way by Kanna... sealing this bond for 7 lifetimes. ❤️", btn: "Complete Marriage 💍" },
+            { title: "Happily Married!", text: "<b>Happy Married Life, Bujji & Kanna! 🎉</b><br><br>You are now officially and magically married in this digital universe! May your love grow stronger every single day! 💖🥰", btn: "Close & Keep Loving" }
+        ];
+
+        function startWedding() {
+            currentWeddingStep = 0;
+            weddingModal.style.display = 'flex';
+            updateWeddingUI();
+        }
+
+        function updateWeddingUI() {
+            if(currentWeddingStep >= weddingSequence.length) {
+                weddingModal.style.display = 'none';
+                return;
+            }
+            weddingTitle.innerHTML = weddingSequence[currentWeddingStep].title;
+            weddingText.innerHTML = weddingSequence[currentWeddingStep].text;
+            weddingBtn.innerHTML = weddingSequence[currentWeddingStep].btn;
+        }
+
+        weddingBtn.addEventListener('click', () => {
+            currentWeddingStep++;
+            updateWeddingUI();
+        });
+    </script>
+</body>
+</html>
